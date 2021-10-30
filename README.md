@@ -92,6 +92,7 @@ null [1,2,3,4,5]
     => False
 ```
 
+
 ### Higher Order Functions
 - A Functions which takes a function as an argument
 ```hs
@@ -184,6 +185,23 @@ f xs = map (\x -> x + 1) (filter (\x -> x> 1 ) xs)
 f xs = map (\x -> x + 1) $ filter (\x -> x> 1 ) xs
 ```
 Allows us to remove some parentheses
+
+## . vs $
+The Infix operator ($) is used to omit brackets. It applies the function on its left to the value on its right:
+```hs
+putStrLn (show (1 + 1))
+putStrLn $ show (1 + 1)
+putStrLn $ show $ 1 + 1
+```
+The dot (.) is used to chain functions:
+```hs
+putStrLn (show (1 + 1))
+(putStrLn . show) (1 + 1)
+putStrLn . show $ 1 + 1
+```
+mainly used to make code neater.
+
+
 
 # Folding (Reduce)
 We can fold left or right.
@@ -302,3 +320,27 @@ greet person = "Hi " ++ name person
 greet (Person name _) = "Hi " ++ name
 ```
 
+## Useful Algorithms:
+**words and unwords**
+```hs
+let mystr = "Hello this is a is long sentence"
+words mystr 
+-- ["Hello", "this", "is", "a", "is", "long", "sentence"]
+let splitwords = words mystr
+take 4 $ splitwords
+-- ["Hello", "this", "is", "a"]
+unwords . take 4 $ words mystr
+-- "Hello this is a"
+```
+**signum and product**
+*signum* returns the sign if a number. -1 if negative +1 if positive and 0 if 0
+**product** = `foldr (*) 1`
+```hs
+let x = [-1,-2,-3,3,2,1,0]
+signum (-10)
+-- -1
+map signum x
+-- [-1,-1,-1,1,1,1,0]
+product $ map signum x
+-- 0
+```
