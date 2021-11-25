@@ -333,7 +333,7 @@ unwords . take 4 $ words mystr
 -- "Hello this is a"
 ```
 **signum and product**
-*signum* returns the sign if a number. -1 if negative +1 if positive and 0 if 0
+*signum* returns the sign of a number. -1 if negative +1 if positive and 0 if 0
 **product** = `foldr (*) 1`
 ```hs
 let x = [-1,-2,-3,3,2,1,0]
@@ -344,3 +344,52 @@ map signum x
 product $ map signum x
 -- 0
 ```
+
+## Maybe
+**Maybe** is a type which can be either `Nothing` or `Just`
+```hs
+data Maybe a = Nothing | Just a
+```
+Maybe allows us to do error handling:
+```hs
+safediv :: Integral a => a -> a -> Maybe a
+safediv a b = if b == 0 then Nothing else Just $ a `div` b
+-- safediv 10 2 = Just 5
+-- safediv 10 0 = Nothing
+```
+Maybe Data Type functions
+```hs
+import Data.Maybe
+
+isJust :: Maybe a -> Bool
+isNothing :: Maybe a -> Bool
+fromJust :: Maybe a -> a
+
+-- function with default value with partial function application
+fromMaybe :: a -> Maybe a -> a
+fromMaybe 3.1415 (Nothing) 
+--    => 3.1415
+fromMaybe 3.1415 (Just 3.1)
+--   => 3.1
+```
+
+## IO
+**IO** is a type which represents the input and output of a program.
+```hs
+hw = putStrLn "Hello World"
+hw :: IO ()
+```
+IO is an action. It can be performed by calling the function hw.
+Functions in Haskell have to be pure so it couldn't work with the environment.
+
+### getLine action
+```hs
+getLine :: IO String
+greet :: IO ()
+greet = do
+    putStrLn "What is your name?"
+    name <- getLine
+    putStrLn ("Hello " ++ name ++ ".")
+```
+greet is an IO actions which prints "What is your name?" and then waits for the user to input a name.
+You technically could use `unsafePerformIO` to get the input but it's not recommended.

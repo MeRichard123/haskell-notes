@@ -1,5 +1,6 @@
 import Data.List
 
+-- Check if number is in a range
 inRange :: Integer -> Integer  -> Integer -> Bool
 inRange min max x = x >= min && x <= max
 
@@ -8,28 +9,36 @@ fac n
     | n <= 1 = 1
     | otherwise = n * fac (n - 1)
 
+-- sum of a list
 listSum :: Num p => [p] -> p
-listSum [] = 0
-listSum (x:xs) = x + listSum xs
+listSum [] = 0                      -- base case
+listSum (x:xs) = x + listSum xs     -- recursive case
 
 reverseList :: [a] -> [a]
-reverseList [] = []
-reverseList (x:xs) = reverseList xs ++ [x]
+reverseList [] = []                  -- base case
+reverseList (x:xs) = reverseList xs ++ [x] -- recursive case
+-- x:xs is a pattern matching x is the fist element and xs is the rest of the list
+-- we then call reverseList on the rest of the list and add the first element to the end of the list
 
+-- lambda expression to add two numbers
 add :: Integer -> Integer -> Integer
 add = (\x -> (\y -> x + y))
 
+-- return the count of a given element in a list
 count :: (Foldable t, Eq a1, Num a2) => a1 -> t a1 -> a2
+-- reduce using an accumulator function and an initial value of 0
 count e = foldr (\x acc -> if e == x then acc + 1 else acc) 0
 
-
+-- io is a monad that can be used to perform IO actions
 main :: IO ()
-main = do 
-    putStr "Hello World\n"
+main = do
+    -- putStrLn prints a string to the console with a new line
+    -- putStr prints a string to the console without a new line 
+    putStrLn "Hello World"
     if inRange 0 10 15 then
-        putStr "In Range\n"
+        putStrLn "In Range"
     else
-        putStr "Out of Range\n"
+        putStrLn "Out of Range"
     -- Calling all the functions above
     print(fac 8)
     print(listSum [1,2,3,4,6,6])
@@ -48,5 +57,17 @@ main = do
     -- Folding
     print(foldr (+) 0 [1,2,3,4,5,6,7,8])
     print(count 1 [1,2,3,4,1,1,1,1])
+    -- input and output using getLine and putStrLn in haskell
+    putStrLn "What is your name?"
+    name <- getLine
+    putStrLn ("Hello " ++ name ++ ".")
 
-    
+-- exampleMain :: IO ()
+-- exampleMain = do
+--     i <- getLine
+--     if i /= "quit" then do
+--         putStrLn ("Input:" ++ i)
+--         exampleMain
+--     else
+--         return ()
+
