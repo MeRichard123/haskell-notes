@@ -27,5 +27,5 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
-
+.vim
 # End of https://www.toptal.com/developers/gitignore/api/haskell

@@ -393,3 +393,97 @@ greet = do
 ```
 greet is an IO actions which prints "What is your name?" and then waits for the user to input a name.
 You technically could use `unsafePerformIO` to get the input but it's not recommended.
+
+## Type Inference
+```hs
+add x y z = (x + y) + z
+
+x :: a
+y :: b
+z :: c
+
+(+) :: (Num d) => d -> d -> d
+(:) :: [d] -> [d] -> [d]
+
+from (x + y) derive a = b and b = d
+from (x + y) : z derive [e] = c and d = e
+ 
+x::d  y::e  z::[e]  z::[d]
+
+add :: (Num d) => d -> d -> [d] -> [d]
+
+-- example two
+f = reverse . sort
+
+reverse :: [a] -> [a]
+(.) :: (c -> d) -> (b -> c) -> b -> d
+sort :: (Ord e) => [e] -> [e]
+
+from reverse . sort derive
+    b = [e], c = [e], c = [a], d = [a], a = e
+
+f :: Ord a => [a] -> [a]
+```
+
+## Monads
+**Monads** are a way to abstract over the IO actions.
+
+**>>= (bind)**
+```hs
+(>>=):: Monad m => m a -> (a -> m b) -> m b
+
+Just 1 >>= (\x -> Just x)
+ ==> Just 1
+
+Nothing >>= (\x -> Just x)
+ ==> Nothing
+
+maybeadd :: Num b => Maybe b -> b -> Maybe b
+maybeadd mx y = mx >>= (\x -> Just $ x + y)
+
+maybeadd Nothing 1
+    ==> Nothing
+
+maybeadd (Just 1) 2
+    ==> Just 3
+
+maybeadd :: Num b => Maybe b -> Maybe b -> Maybe b
+maybeadd mx my = mx >>= (\x -> my >>= (\y -> return $ x + y))   -- return is a function that returns a monad
+
+monadd :: (Monad m, Num b) => m b -> m b -> m b
+monadd mx my = mx >>= (\x -> my >>= (\y -> return $ x + y))
+-- the shorthand for bind is using do notation
+monadd mx my = do 
+    x <- m
+    y <- my
+    return $ x + y
+
+(>>) :: Monad m => m a -> m b -> m b
+m >> n = m >>= (\_ -> n)
+```
+
+## Infinite Lists
+**Infinite Lists** are a way to represent a list that is not bounded.
+```hs
+ones = 1 : ones
+
+tail ones
+    ==> 1 : ones
+
+take 5 ones
+    ==> [1,1,1,1,1]
+
+take 5 (map (*2) ones)
+    ==> [2,2,2,2,2]
+
+-- evaluation of list is not forced above so we can take 5
+
+nat = asc 1
+    where asc n = n : (asc $ n+1)
+evens = map (*2) nat
+odds = filter (\x -> mod x 2 == 1) nat
+
+-- fibonacci
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+-- zipWith combines two lists into one using the operation (+)
+```
