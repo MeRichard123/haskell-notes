@@ -487,3 +487,63 @@ odds = filter (\x -> mod x 2 == 1) nat
 fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 -- zipWith combines two lists into one using the operation (+)
 ```
+### Data, Type, newtype
+```hs
+data Person = Person {name :: String,
+                      age :: Int}
+-- data types
+type Color = (Integer, Integer, Integer)
+type Palette = [Color]
+-- newtype is a data type that is a single constructor
+newtype Name = Name String
+-- new type is restricted to one field (isomorphic)
+```
+
+### Defining an alternative type
+```hs
+data Either a b = Left a | Right b
+type SomeData = Either String Int
+
+import data.Either
+lefts :: [Either a b] -> [a]
+rights :: [Either a b] -> [b]
+-- take a list of Eithers and filter out the lefts and rights
+isLeft :: Either a b -> Bool
+isRight :: Either a b -> Bool
+-- tell you if the constructor is a left or a right
+fromLeft :: a -> Either a b -> a
+fromRight :: b -> Either a b -> b
+-- take a value and a constructor and return the value get a value from left or right
+
+either :: (a -> c) -> (b -> c) -> Either a b -> c
+-- takes a function that takes a value from left and a function that takes a value from right and returns a value
+-- if input is a left then the first function is applied and if input is a right then the second function is applied
+f = either (\l -> "Number") (\r -> r)
+f (Left 1)
+    ==> "Number"
+f (Right "Hello")
+    ==> "Hello"
+
+partitionEithers :: [Either a b] -> ([a], [b])
+-- separate a list of Eithers into a list of lefts and a list of rights
+partitionEithers [Left 1, Right 2, Left 3, Right 4]
+==> ([1,3], [2,4])
+```
+This can be used for Error handling. It is like a Maybe but Nothing holds a value.
+```hs
+data Either a b = Left a | Right b
+data Maybe a = Nothing | Just a
+-- left is a erroneous value and right is a correct value
+-- the wrong value is discarded in maybe which is why Either is useful.
+```
+
+
+## Quick Sort
+smaller and larger using list comprehensions
+```hs
+qsort []     =  []
+qsort (x:xs) = qsort smaller ++ [x] ++ qsort larger
+               where
+                   smaller = [a | a <- xs, a <= x]
+                   larger  = [b | b <- xs, b > x]
+```

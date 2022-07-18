@@ -1,4 +1,11 @@
 import Data.List
+-- import Data.List hiding (group)
+-- import everything apart from group
+-- import Data.List as NewName
+-- importing data types:
+-- data DataType = A | B | C
+-- import Module (DataType(..))
+import MyModule (doubleList)
 
 -- Check if number is in a range
 inRange :: Integer -> Integer  -> Integer -> Bool
@@ -28,6 +35,24 @@ add = (\x -> (\y -> x + y))
 count :: (Foldable t, Eq a1, Num a2) => a1 -> t a1 -> a2
 -- reduce using an accumulator function and an initial value of 0
 count e = foldr (\x acc -> if e == x then acc + 1 else acc) 0
+
+
+-- data types
+type Color = (Integer, Integer, Integer)
+type Palette = [Color]
+-- newtype is a data type that is a single constructor
+newtype Name = Name String
+-- new type is restricted to one field (isomorphic)
+
+
+-- quick sort
+-- using list comprehensions
+qsort :: Ord a => [a] -> [a]
+qsort []     =  []
+qsort (x:xs) = qsort smaller ++ [x] ++ qsort larger
+               where
+                   smaller = [a | a <- xs, a <= x]
+                   larger  = [b | b <- xs, b > x]
 
 -- io is a monad that can be used to perform IO actions
 main :: IO ()
@@ -61,7 +86,9 @@ main = do
     putStrLn "What is your name?"
     name <- getLine
     putStrLn ("Hello " ++ name ++ ".")
-
+    print(doubleList [1,2,3,4,5,6,7,8,9])
+    
+    print(qsort [1,80,-9,5,7,8,5,15301,17])
 -- exampleMain :: IO ()
 -- exampleMain = do
 --     i <- getLine
