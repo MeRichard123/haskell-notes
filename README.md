@@ -35,7 +35,7 @@ in_range min max x = ilb && iub
 
 ## program flow:
 ```hs
-in_range max max x =
+in_range min max x =
     if ilb then iub else False
     where
         ilb = min <=x
